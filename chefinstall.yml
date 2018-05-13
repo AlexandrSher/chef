@@ -1,0 +1,8 @@
+- name: chef_install
+  hosts: localhost
+  tasks:
+    - shell: vagrant up
+    - shell: ./vagrant.sh
+    - shell: ansible-playbook task.yml
+
+

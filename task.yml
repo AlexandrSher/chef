@@ -1,0 +1,40 @@
+- name: instal Chef
+  hosts: chef-server
+  become: yes
+  tasks:
+    - shell:
+        /vagrant/install-chef-server.sh
+
+- name: locallate
+  hosts: localhost
+  tasks:
+    - shell:
+        sudo sh -c "echo '192.168.56.10 chef-server' >> /etc/hosts"
+        sudo sh -c "echo '192.168.56.11 chefnode1' >> /etc/hosts"
+        sudo sh -c "echo '192.168.56.12 chefnode1' >> /etc/hosts"
+    - shell:
+        scp vagrant@192.168.56.10:/drop/chefadmin.pem ~/CHEF/.chef/chefadmin.pem
+    - shell:
+        sudo chmod 600 ~/CHEF/.chef/chefadmin.pem
+    - shell: |
+        cd ~/CHEF/
+        knife ssl fetch
+        knife ssl check
+        cd ~/CHEF/cookbooks/jboss/
+        berks install
+        berks upload --no-freeze
+    - shell:
+        knife environment from file "/home/student/CHEF/env.json"
+    - shell: |
+        cd ~/CHEF/
+        knife upload .
+    - shell:
+        knife node from file "/home/student/CHEF/chefnode1.json"
+    - shell: 
+        knife bootstrap 192.168.56.11 --ssh-user vagrant --ssh-password 'vagrant'  --sudo --use-sudo-password --node-name chefnode1 --run-list 'role[app_server]' -E "Chef-dev" -y
+    - shell:
+        knife ssh 'name:chefnode1' 'sudo chef-client' --ssh-user vagrant --ssh-password vagrant --attribute hostname
+    - shell:
+        knife bootstrap 192.168.56.12 --ssh-user vagrant --ssh-password 'vagrant'  --sudo --use-sudo-password --node-name chefnode2 --run-list 'role[web_server]' -E "Chef-dev" -y
+    - shell:
+        knife ssh 'name:chefnode2' 'sudo chef-client' --ssh-user vagrant --ssh-password vagrant --attribute hostname

@@ -1,0 +1,4 @@
+[sandbox]
+chef-server ansible_user=vagrant ansible_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_private_key_file=/home/student/CHEF/.vagrant/machines/chef-server/virtualbox/private_key
+chefnode1 ansible_user=vagrant ansible_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_private_key_file=/home/student/CHEF/.vagrant/machines/chefnode1/virtualbox/private_key
+chefnode2 ansible_user=vagrant ansible_host=127.0.0.1 ansible_ssh_port=2201 ansible_ssh_private_key_file=/home/student/CHEF/.vagrant/machines/chefnode2/virtualbox/private_key
