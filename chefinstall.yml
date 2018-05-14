@@ -3,6 +3,6 @@
   tasks:
     - shell: vagrant up
     - shell: ./vagrant.sh
-    - shell: ansible-playbook task.yml
+#    - shell: ansible-playbook task.yml
 
 
